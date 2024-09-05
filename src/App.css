@@ -1,0 +1,30 @@
+/* src/App.css */
+
+/* Sticky date header for the calendar */
+.fc .fc-scrollgrid-sync-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: #fff; /* Ensure the background stays white */
+  border-bottom: 2px solid #e0e0e0; /* Add a bottom border for clarity */
+}
+
+/* Styling for event bars with rounded corners */
+.fc-event {
+  border-radius: 4px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Add different colors for different types of events */
+.fc-event.deal-pipe {
+  background-color: #1976d2 !important; /* Blue for Deal Pipe */
+}
+
+.fc-event.preparation {
+  background-color: #388e3c !important; /* Green for Preparation */
+}
+
+.fc-event.maintenance {
+  background-color: #d32f2f !important; /* Red for Maintenance */
+}
