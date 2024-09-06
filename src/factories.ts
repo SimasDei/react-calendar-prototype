@@ -1,31 +1,52 @@
-// src/factories.ts
-export type EventType = 'deal-pipe' | 'maintenance' | 'preparation';
+export enum EventType {
+  DealPipe = 'deal-pipe',
+  Maintenance = 'maintenance',
+  Preparation = 'preparation',
+  Project = 'project',
+}
+
+export interface Event {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  resourceId: string;
+  extendedProps: {
+    type: EventType;
+    gradient: string;
+  };
+}
+
+export interface Resource {
+  id: string;
+  title: string;
+  children: { id: string; title: string }[];
+  events: Event[];
+}
 
 export class EventFactory {
   private static gradientMap = {
-    'deal-pipe': 'linear-gradient(45deg, #368FD8, #1940F1)', // Deal Pipe Gradient
-    maintenance: 'linear-gradient(45deg, #CCBE3C, #9A7E1C)', // Maintenance Gradient
-    preparation: 'linear-gradient(45deg, #3CCC98, #1C9A6D)', // Preparation Gradient
+    [EventType.DealPipe]: 'linear-gradient(45deg, #368FD8, #1940F1)',
+    [EventType.Maintenance]: 'linear-gradient(45deg, #CCBE3C, #9A7E1C)',
+    [EventType.Preparation]: 'linear-gradient(45deg, #3CCC98, #1C9A6D)',
+    [EventType.Project]: 'linear-gradient(45deg, #4A148C, #D500F9)',
   };
 
-  // Generate event with a random duration
-  static createEvent(type: EventType, resourceId: string, title: string, startDate: string, durationDays: number, dependency?: string) {
+  static createEvent(type: EventType, resourceId: string, title: string, startDate: string, durationDays: number): Event {
     const endDate = this.addDaysToDate(startDate, durationDays);
     return {
       id: `${resourceId}-${type}`,
-      resourceId: resourceId,
-      title: title,
+      resourceId,
+      title,
       start: `${startDate}T08:00:00`,
       end: `${endDate}T17:00:00`,
       extendedProps: {
-        type: type,
+        type,
         gradient: this.gradientMap[type],
       },
-      dependency: dependency,
     };
   }
 
-  // Helper to add days to a date string
   public static addDaysToDate(date: string, days: number): string {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + days);
@@ -34,30 +55,44 @@ export class EventFactory {
 }
 
 export class ResourceFactory {
-  static createResource(msn: string, startDate: string) {
-    // Duration for each event type
-    const dealPipeDuration = 30; // Deal Pipe lasts the entire project
-    const preparationDuration = 5; // Preparation lasts 5 days
-    const maintenanceDuration = 7; // Maintenance lasts 7 days
+  static createResource(msn: string, startDate: string): Resource {
+    const preparationDuration = 5;
+    const maintenanceDuration = 7;
 
-    // Create events for each stage of the MSN's lifecycle
-    const dealPipeEvent = EventFactory.createEvent('deal-pipe', `deal-pipe-${msn}`, 'Deal Pipe', startDate, dealPipeDuration);
+    const projectEvent = EventFactory.createEvent(
+      EventType.Project,
+      `MSN-${msn}`,
+      'MSN',
+      startDate,
+      preparationDuration + maintenanceDuration + 1
+    );
 
     const preparationEvent = EventFactory.createEvent(
-      'preparation',
+      EventType.Preparation,
       `preparation-${msn}`,
       'Source Project Preparation',
       startDate,
       preparationDuration
     );
 
+    const maintenanceStartDate = EventFactory.addDaysToDate(startDate, preparationDuration + 1);
     const maintenanceEvent = EventFactory.createEvent(
-      'maintenance',
+      EventType.Maintenance,
       `maintenance-${msn}`,
       'Maintenance',
-      EventFactory.addDaysToDate(startDate, preparationDuration + 1), // Maintenance starts after Preparation
-      maintenanceDuration,
-      preparationEvent.id // Maintenance depends on Preparation
+      maintenanceStartDate,
+      maintenanceDuration
+    );
+
+    // Calculate the Deal Pipe duration to span across all child events
+    const dealPipeStart = startDate;
+    const dealPipeEnd = EventFactory.addDaysToDate(maintenanceStartDate, maintenanceDuration);
+    const dealPipeEvent = EventFactory.createEvent(
+      EventType.DealPipe,
+      `deal-pipe-${msn}`,
+      'Deal Pipe',
+      dealPipeStart,
+      Math.ceil((new Date(dealPipeEnd).getTime() - new Date(dealPipeStart).getTime()) / (1000 * 60 * 60 * 24))
     );
 
     return {
@@ -68,7 +103,7 @@ export class ResourceFactory {
         { id: `preparation-${msn}`, title: 'Source Project Preparation' },
         { id: `maintenance-${msn}`, title: 'Maintenance' },
       ],
-      events: [dealPipeEvent, preparationEvent, maintenanceEvent],
+      events: [projectEvent, dealPipeEvent, preparationEvent, maintenanceEvent],
     };
   }
 }

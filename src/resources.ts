@@ -1,4 +1,3 @@
-// src/resources.ts
 import { ResourceFactory } from './factories';
 
 // Helper function to generate random start dates
