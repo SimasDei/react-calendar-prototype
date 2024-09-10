@@ -1,0 +1,36 @@
+.child-event-card {
+  position: relative;
+  padding: 5px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 30px;
+  color: white;
+  overflow: hidden;
+}
+
+.child-event-content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.child-event-title {
+  font-weight: normal; /* Normal font weight for child events */
+  font-size: 0.85rem; /* Smaller font for child event title */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.child-event-duration {
+  font-size: 0.7rem; /* Smaller font size for child event duration */
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.flag-icon {
+  margin-left: 5px;
+}

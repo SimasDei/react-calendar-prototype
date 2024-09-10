@@ -2,7 +2,6 @@ import { CssBaseline } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './App.css';
 import App from './App.tsx';
 
 const theme = createTheme({

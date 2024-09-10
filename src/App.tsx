@@ -1,8 +1,12 @@
 import { EventChangeArg } from '@fullcalendar/core';
-import { Container } from '@mui/material';
+import { Container, CssBaseline } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AircraftSpecification from './AircraftSpec/AircraftSpecification';
 import Calendar from './Calendar';
+import Sidebar from './Nav/Sidebar';
 import { events as generatedEvents, resources as generatedResources } from './resources';
+import Settings from './Settings';
 
 const App: React.FC = () => {
   const [events, setEvents] = useState(generatedEvents);
@@ -25,14 +29,20 @@ const App: React.FC = () => {
         : event
     );
     setEvents(updatedEvents);
-
-    console.log('Updated events:', updatedEvent);
   };
 
   return (
-    <Container style={{ marginTop: '2rem', maxWidth: '100%' }}>
-      <Calendar events={events} resources={resources} onEventChange={handleEventChange} />
-    </Container>
+    <BrowserRouter>
+      <CssBaseline />
+      <Sidebar />
+      <Container style={{ marginTop: '2rem', paddingLeft: '70px', maxWidth: '100%' }}>
+        <Routes>
+          <Route path="/" element={<Calendar events={events} resources={resources} onEventChange={handleEventChange} />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/aircraft-specification" element={<AircraftSpecification />} />
+        </Routes>
+      </Container>
+    </BrowserRouter>
   );
 };
 

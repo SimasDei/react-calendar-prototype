@@ -14,6 +14,7 @@ export interface Event {
   extendedProps: {
     type: EventType;
     gradient: string;
+    description?: string;
   };
 }
 
@@ -29,10 +30,17 @@ export class EventFactory {
     [EventType.DealPipe]: 'linear-gradient(45deg, #368FD8, #1940F1)',
     [EventType.Maintenance]: 'linear-gradient(45deg, #CCBE3C, #9A7E1C)',
     [EventType.Preparation]: 'linear-gradient(45deg, #3CCC98, #1C9A6D)',
-    [EventType.Project]: 'linear-gradient(45deg, #4A148C, #D500F9)',
+    [EventType.Project]: 'linear-gradient(45deg, #ffffff, #f0f0f0)',
   };
 
-  static createEvent(type: EventType, resourceId: string, title: string, startDate: string, durationDays: number): Event {
+  static createEvent(
+    type: EventType,
+    resourceId: string,
+    title: string,
+    description: string,
+    startDate: string,
+    durationDays: number
+  ): Event {
     const endDate = this.addDaysToDate(startDate, durationDays);
     return {
       id: `${resourceId}-${type}`,
@@ -43,6 +51,7 @@ export class EventFactory {
       extendedProps: {
         type,
         gradient: this.gradientMap[type],
+        description,
       },
     };
   }
@@ -63,6 +72,7 @@ export class ResourceFactory {
       EventType.Project,
       `MSN-${msn}`,
       'MSN',
+      'Source Project',
       startDate,
       preparationDuration + maintenanceDuration + 1
     );
@@ -70,6 +80,7 @@ export class ResourceFactory {
     const preparationEvent = EventFactory.createEvent(
       EventType.Preparation,
       `preparation-${msn}`,
+      'Source Project Preparation',
       'Source Project Preparation',
       startDate,
       preparationDuration
@@ -79,6 +90,7 @@ export class ResourceFactory {
     const maintenanceEvent = EventFactory.createEvent(
       EventType.Maintenance,
       `maintenance-${msn}`,
+      'Maintenance',
       'Maintenance',
       maintenanceStartDate,
       maintenanceDuration
@@ -90,6 +102,7 @@ export class ResourceFactory {
     const dealPipeEvent = EventFactory.createEvent(
       EventType.DealPipe,
       `deal-pipe-${msn}`,
+      'Deal Pipe',
       'Deal Pipe',
       dealPipeStart,
       Math.ceil((new Date(dealPipeEnd).getTime() - new Date(dealPipeStart).getTime()) / (1000 * 60 * 60 * 24))
