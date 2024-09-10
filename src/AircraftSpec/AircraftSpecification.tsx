@@ -11,12 +11,14 @@ import { FormData, sectionMapping, specificationFields, viewMaps } from './speci
 const AircraftSpecification: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [selectedSection, setSelectedSection] = useState<string>('');
+  const [selectedSubSection, setSelectedSubSection] = useState<string | undefined>(undefined);
   const [formData, setFormData] = useState<Record<string, FormData>>({});
 
-  const handleSectionClick = (section: string) => {
+  const handleSectionClick = (section: string, subSection?: string) => {
     setSelectedSection(section);
-    console.log('🚀 ~ formData:', formData);
+    setSelectedSubSection(subSection);
     setOpen(true);
+    console.log('🚀 ~ formData:', formData);
   };
 
   const handleClose = () => {
@@ -34,31 +36,30 @@ const AircraftSpecification: React.FC = () => {
     }));
   };
 
-  const renderFields = (section: string) => {
-    return (
-      sectionMapping[section]?.map((fieldKey) => {
-        const sectionFields = specificationFields[fieldKey];
-        return (
-          <Box key={fieldKey} sx={{ marginBottom: 4 }}>
-            <Typography variant="h6" gutterBottom>
-              {sectionFields.title}
-            </Typography>
-            {sectionFields.fields.map((field) => (
-              <TextField
-                key={field.name}
-                label={field.label}
-                name={field.name}
-                type={field.type}
-                fullWidth
-                margin="dense"
-                onChange={handleInputChange(section)}
-                InputLabelProps={field.type === 'date' ? { shrink: true } : undefined}
-              />
-            ))}
-          </Box>
-        );
-      }) || []
-    );
+  const renderFields = (section: string, subsection?: string) => {
+    const fieldsToRender = subsection ? [subsection] : sectionMapping[section] || [];
+    return fieldsToRender.map((fieldKey) => {
+      const sectionFields = specificationFields[fieldKey];
+      return (
+        <Box key={fieldKey} sx={{ marginBottom: 4 }}>
+          <Typography variant="h6" gutterBottom>
+            {sectionFields.title}
+          </Typography>
+          {sectionFields.fields.map((field) => (
+            <TextField
+              key={field.name}
+              label={field.label}
+              name={field.name}
+              type={field.type}
+              fullWidth
+              margin="dense"
+              onChange={handleInputChange(section)}
+              InputLabelProps={field.type === 'date' ? { shrink: true } : undefined}
+            />
+          ))}
+        </Box>
+      );
+    });
   };
 
   const views = [
@@ -80,13 +81,20 @@ const AircraftSpecification: React.FC = () => {
           title={view.title}
           imageSrc={view.imageSrc}
           map={viewMaps[view.section]}
-          onAreaClick={(area) => handleSectionClick(area.id!)}
+          onAreaClick={(area) => handleSectionClick(view.section, area.id)}
           renderFields={renderFields}
           section={view.section}
         />
       ))}
 
-      <FormModal open={open} onClose={handleClose} title={selectedSection} renderFields={renderFields} section={selectedSection} />
+      <FormModal
+        open={open}
+        onClose={handleClose}
+        title={selectedSection}
+        renderFields={renderFields}
+        section={selectedSection}
+        subsection={selectedSubSection}
+      />
     </Container>
   );
 };
