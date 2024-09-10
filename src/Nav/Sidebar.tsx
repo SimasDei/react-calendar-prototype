@@ -34,17 +34,17 @@ const Sidebar: React.FC = () => {
           </ListItemIcon>
           {!collapsed && <ListItemText primary="Calendar" />}
         </ListItem>
-        <ListItem component={Link} to="/settings" sx={{ textDecoration: 'none', color: 'inherit' }}>
-          <ListItemIcon>
-            <Settings />
-          </ListItemIcon>
-          {!collapsed && <ListItemText primary="Settings" />}
-        </ListItem>
         <ListItem component={Link} to="/aircraft-specification" sx={{ textDecoration: 'none', color: 'inherit' }}>
           <ListItemIcon>
             <AirplanemodeActive />
           </ListItemIcon>
           {!collapsed && <ListItemText primary="Aircraft Specification" />}
+        </ListItem>
+        <ListItem component={Link} to="/settings" sx={{ textDecoration: 'none', color: 'inherit' }}>
+          <ListItemIcon>
+            <Settings />
+          </ListItemIcon>
+          {!collapsed && <ListItemText primary="Settings" />}
         </ListItem>
       </List>
     </Drawer>

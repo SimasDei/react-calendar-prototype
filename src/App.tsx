@@ -38,8 +38,8 @@ const App: React.FC = () => {
       <Container style={{ marginTop: '2rem', paddingLeft: '70px', maxWidth: '100%' }}>
         <Routes>
           <Route path="/" element={<Calendar events={events} resources={resources} onEventChange={handleEventChange} />} />
-          <Route path="/settings" element={<Settings />} />
           <Route path="/aircraft-specification" element={<AircraftSpecification />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </Container>
     </BrowserRouter>

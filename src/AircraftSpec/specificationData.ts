@@ -1,4 +1,6 @@
-export type Filed = {
+import { CustomArea } from 'react-img-mapper';
+
+export type Field = {
   name: string;
   label: string;
   type: string;
@@ -6,7 +8,12 @@ export type Filed = {
 
 export type Section = {
   title: string;
-  fields: Filed[];
+  fields: Field[];
+};
+
+export type ViewMap = {
+  name: string;
+  areas: CustomArea[];
 };
 
 export const specificationFields: Record<string, Section> = {
@@ -121,3 +128,84 @@ export const sectionMapping: Record<string, string[]> = {
   sideView: ['landingGear'],
   topView: ['airframe', 'engineAPU', 'avionics'],
 };
+
+export const viewMaps: Record<string, ViewMap> = {
+  frontView: {
+    name: 'front-view-map',
+    areas: [
+      {
+        id: 'aircraft',
+        shape: 'circle',
+        coords: [402, 222, 25],
+        scaledCoords: [150, 150, 25],
+        preFillColor: 'rgba(255, 0, 0, 0.3)',
+      },
+      {
+        id: 'operatingLimitations',
+        shape: 'circle',
+        coords: [600, 50, 25],
+        scaledCoords: [350, 150, 25],
+        preFillColor: 'rgba(0, 255, 0, 0.3)',
+      },
+    ],
+  },
+  sectionView: {
+    name: 'section-view-map',
+    areas: [
+      {
+        id: 'configuration',
+        shape: 'circle',
+        coords: [402, 200, 30],
+        scaledCoords: [150, 150, 50],
+        preFillColor: 'rgba(0, 0, 255, 0.3)',
+      },
+    ],
+  },
+  sideView: {
+    name: 'side-view-map',
+    areas: [
+      {
+        id: 'landingGear',
+        shape: 'circle',
+        coords: [380, 230, 30],
+        scaledCoords: [150, 150, 50],
+        preFillColor: 'rgba(255, 255, 0, 0.3)',
+      },
+    ],
+  },
+  topView: {
+    name: 'top-view-map',
+    areas: [
+      {
+        id: 'airframe',
+        shape: 'circle',
+        coords: [380, 310, 25],
+        scaledCoords: [150, 150, 50],
+        preFillColor: 'rgba(0, 255, 255, 0.3)',
+      },
+
+      {
+        id: 'engineAPU',
+        shape: 'circle',
+        coords: [250, 200, 25],
+        scaledCoords: [150, 150, 50],
+        preFillColor: 'rgba(255, 0, 255, 0.3)',
+      },
+      {
+        id: 'avionics',
+        shape: 'circle',
+        coords: [380, 100, 25],
+        scaledCoords: [150, 150, 50],
+        preFillColor: 'rgba(65, 105, 225, 0.3)',
+      },
+    ],
+  },
+};
+
+type FormDataKeys = keyof typeof specificationFields extends infer K
+  ? K extends string
+    ? (typeof specificationFields)[K]['fields'][number]['name']
+    : never
+  : never;
+
+export type FormData = Partial<Record<FormDataKeys, string | number | boolean>>;
