@@ -4,19 +4,17 @@ import React from 'react';
 import { CustomArea } from 'react-img-mapper';
 import InteractiveImage from './InteractiveImage';
 
-export interface AreaMap {
-  name: string;
-  areas: CustomArea[];
-}
-
-interface AircraftViewProps {
+type AircraftViewProps = {
   title: string;
   imageSrc: string;
-  map: AreaMap;
+  map: {
+    name: string;
+    areas: CustomArea[];
+  };
   onAreaClick: (area: CustomArea) => void;
   renderFields: (section: string) => JSX.Element[];
   section: string;
-}
+};
 
 const AircraftView: React.FC<AircraftViewProps> = ({ title, imageSrc, map, onAreaClick, renderFields, section }) => {
   return (

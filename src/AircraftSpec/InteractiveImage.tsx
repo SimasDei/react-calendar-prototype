@@ -1,18 +1,41 @@
-import { Box } from '@mui/material';
+import { Box, Tooltip } from '@mui/material';
+import ImageListItem from '@mui/material/ImageListItem';
 import React from 'react';
-import ImageMapper, { CustomArea } from 'react-img-mapper';
-import { AreaMap } from './types.ts';
+import { CustomArea } from 'react-img-mapper';
 
-interface InteractiveImageProps {
+type InteractiveImageProps = {
   src: string;
-  map: AreaMap;
+  map: {
+    name: string;
+    areas: CustomArea[];
+  };
   onAreaClick: (area: CustomArea) => void;
-}
+};
 
 const InteractiveImage: React.FC<InteractiveImageProps> = ({ src, map, onAreaClick }) => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
-      <ImageMapper src={src} map={map} onClick={onAreaClick} width={800} />
+    <Box sx={{ position: 'relative' }}>
+      <ImageListItem>
+        <img src={src} alt={map.name} style={{ width: '100%' }} />
+      </ImageListItem>
+      {map.areas.map((area, index) => (
+        <Tooltip key={index} title={area.id || ''}>
+          <Box
+            sx={{
+              position: 'absolute',
+              left: `${area.coords[0]}px`,
+              top: `${area.coords[1]}px`,
+              width: `${area.coords[2] * 2}px`,
+              height: `${area.coords[2] * 2}px`,
+              borderRadius: '50%',
+              backgroundColor: area.preFillColor,
+              cursor: 'pointer',
+              transform: 'translate(-50%, -50%)',
+            }}
+            onClick={() => onAreaClick(area)}
+          />
+        </Tooltip>
+      ))}
     </Box>
   );
 };

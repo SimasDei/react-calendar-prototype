@@ -136,14 +136,14 @@ export const viewMaps: Record<string, ViewMap> = {
       {
         id: 'aircraft',
         shape: 'circle',
-        coords: [402, 222, 25],
+        coords: [580, 320, 25],
         scaledCoords: [150, 150, 25],
         preFillColor: 'rgba(255, 0, 0, 0.3)',
       },
       {
         id: 'operatingLimitations',
         shape: 'circle',
-        coords: [600, 50, 25],
+        coords: [800, 100, 25],
         scaledCoords: [350, 150, 25],
         preFillColor: 'rgba(0, 255, 0, 0.3)',
       },
@@ -155,7 +155,7 @@ export const viewMaps: Record<string, ViewMap> = {
       {
         id: 'configuration',
         shape: 'circle',
-        coords: [402, 200, 30],
+        coords: [580, 280, 40],
         scaledCoords: [150, 150, 50],
         preFillColor: 'rgba(0, 0, 255, 0.3)',
       },
@@ -167,7 +167,7 @@ export const viewMaps: Record<string, ViewMap> = {
       {
         id: 'landingGear',
         shape: 'circle',
-        coords: [380, 230, 30],
+        coords: [545, 345, 40],
         scaledCoords: [150, 150, 50],
         preFillColor: 'rgba(255, 255, 0, 0.3)',
       },
@@ -179,7 +179,7 @@ export const viewMaps: Record<string, ViewMap> = {
       {
         id: 'airframe',
         shape: 'circle',
-        coords: [380, 310, 25],
+        coords: [450, 450, 25],
         scaledCoords: [150, 150, 50],
         preFillColor: 'rgba(0, 255, 255, 0.3)',
       },
@@ -187,14 +187,14 @@ export const viewMaps: Record<string, ViewMap> = {
       {
         id: 'engineAPU',
         shape: 'circle',
-        coords: [250, 200, 25],
+        coords: [360, 290, 25],
         scaledCoords: [150, 150, 50],
         preFillColor: 'rgba(255, 0, 255, 0.3)',
       },
       {
         id: 'avionics',
         shape: 'circle',
-        coords: [380, 100, 25],
+        coords: [600, 50, 25],
         scaledCoords: [150, 150, 50],
         preFillColor: 'rgba(65, 105, 225, 0.3)',
       },
