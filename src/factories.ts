@@ -65,23 +65,24 @@ export class EventFactory {
 
 export class ResourceFactory {
   static createResource(msn: string, startDate: string): Resource {
-    const preparationDuration = 5;
-    const maintenanceDuration = 7;
+    const preparationDuration = Math.floor(Math.random() * 30) + 15;
+    const maintenanceDuration = Math.floor(Math.random() * 30) + 15;
+    const projectDuration = preparationDuration + maintenanceDuration + Math.floor(Math.random() * 30) + 15;
 
     const projectEvent = EventFactory.createEvent(
       EventType.Project,
       `MSN-${msn}`,
-      'MSN',
-      'Source Project',
+      'MSN Project',
+      'Project Description',
       startDate,
-      preparationDuration + maintenanceDuration + 1
+      projectDuration
     );
 
     const preparationEvent = EventFactory.createEvent(
       EventType.Preparation,
       `preparation-${msn}`,
       'Source Project Preparation',
-      'Source Project Preparation',
+      'Preparation Description',
       startDate,
       preparationDuration
     );
@@ -91,21 +92,19 @@ export class ResourceFactory {
       EventType.Maintenance,
       `maintenance-${msn}`,
       'Maintenance',
-      'Maintenance',
+      'Maintenance Description',
       maintenanceStartDate,
       maintenanceDuration
     );
 
-    // Calculate the Deal Pipe duration to span across all child events
     const dealPipeStart = startDate;
-    const dealPipeEnd = EventFactory.addDaysToDate(maintenanceStartDate, maintenanceDuration);
     const dealPipeEvent = EventFactory.createEvent(
       EventType.DealPipe,
       `deal-pipe-${msn}`,
       'Deal Pipe',
-      'Deal Pipe',
+      'Deal Pipe Description',
       dealPipeStart,
-      Math.ceil((new Date(dealPipeEnd).getTime() - new Date(dealPipeStart).getTime()) / (1000 * 60 * 60 * 24))
+      projectDuration
     );
 
     return {
