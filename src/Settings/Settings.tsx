@@ -4,12 +4,15 @@ import { User, UserFactory } from '../factories';
 import TabPanel from './TabPanel';
 import UserForm from './UserForm';
 import UserList from './UserList';
+import UserModal from './UserModal';
 
 const initialUsers = UserFactory.createUsers(50);
 
 const Settings: React.FC = () => {
   const [value, setValue] = useState(0);
   const [users, setUsers] = useState<User[]>(initialUsers);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -17,6 +20,24 @@ const Settings: React.FC = () => {
 
   const handleAddUser = (newUser: User) => {
     setUsers((prevUsers) => [newUser, ...prevUsers]);
+  };
+
+  const handleUserClick = (user: User) => {
+    setSelectedUser(user);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleTagClick = (username: string) => {
+    const taggedUser = users.find((user) => user.username === username);
+    if (taggedUser) {
+      setSelectedUser(taggedUser);
+      setModalOpen(true);
+    }
   };
 
   return (
@@ -46,7 +67,7 @@ const Settings: React.FC = () => {
               <Typography variant="h6" gutterBottom>
                 Current Users
               </Typography>
-              <UserList users={users} />
+              <UserList users={users} onUserClick={handleUserClick} />
             </Grid>
           </Grid>
         </Paper>
@@ -59,6 +80,8 @@ const Settings: React.FC = () => {
       <TabPanel value={value} index={2}>
         <Box sx={{ p: 3 }}>Preferences Content</Box>
       </TabPanel>
+
+      <UserModal user={selectedUser} open={modalOpen} onClose={handleCloseModal} onTagClick={handleTagClick} />
     </Box>
   );
 };

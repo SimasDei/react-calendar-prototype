@@ -2,18 +2,16 @@ import { Avatar, Box, Card, CardActionArea, CardContent, Grid, Pagination, TextF
 import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { User } from '../factories';
-import UserModal from './UserModal';
 
 interface UserListProps {
   users: User[];
+  onUserClick: (user: User) => void;
 }
 
-const UserList: React.FC<UserListProps> = ({ users }) => {
+const UserList: React.FC<UserListProps> = ({ users, onUserClick }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState(users);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
   const usersPerPage = 5;
 
   const debouncedSearch = useCallback(
@@ -37,16 +35,6 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
     setCurrentPage(page);
   };
 
-  const handleUserClick = (user: User) => {
-    setSelectedUser(user);
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setSelectedUser(null);
-  };
-
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
@@ -56,7 +44,7 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
       <TextField label="Search Users" variant="outlined" fullWidth value={searchQuery} onChange={handleSearchChange} sx={{ mb: 2 }} />
       {currentUsers.map((user) => (
         <Card key={user.id} sx={{ mb: 2 }}>
-          <CardActionArea onClick={() => handleUserClick(user)}>
+          <CardActionArea onClick={() => onUserClick(user)}>
             <CardContent>
               <Grid container alignItems="center" spacing={2}>
                 <Grid item>
@@ -74,7 +62,6 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
         </Card>
       ))}
       <Pagination count={Math.ceil(filteredUsers.length / usersPerPage)} page={currentPage} onChange={handlePageChange} sx={{ mt: 2 }} />
-      <UserModal user={selectedUser} open={modalOpen} onClose={handleCloseModal} />
     </Box>
   );
 };

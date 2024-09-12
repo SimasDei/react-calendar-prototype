@@ -1,27 +1,25 @@
-import { Box, List, ListItem, ListItemText, Modal, Typography } from '@mui/material';
+import { Box, Grid, List, ListItem, ListItemText, Modal, Typography } from '@mui/material';
 import React from 'react';
 import { User } from '../factories';
+import { roleIcons } from './RoleIcons';
 import TaggedUser from './TaggedUser';
 
 interface UserModalProps {
   user: User | null;
   open: boolean;
   onClose: () => void;
+  onTagClick: (username: string) => void;
 }
 
-const UserModal: React.FC<UserModalProps> = ({ user, open, onClose }) => {
+const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onTagClick }) => {
   if (!user) return null;
-
-  const handleTagClick = (username: string) => {
-    alert(`User tagged: ${username}`);
-  };
 
   const renderCommentText = (text: string) => {
     const parts = text.split(/(@\w+\.\w+)/g);
     return parts.map((part, index) => {
       if (part.startsWith('@')) {
         const username = part.slice(1);
-        return <TaggedUser key={index} username={username} onClick={handleTagClick} />;
+        return <TaggedUser key={index} username={username} onClick={onTagClick} />;
       }
       return part;
     });
@@ -47,16 +45,44 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose }) => {
         <Typography variant="body2" color="textSecondary" gutterBottom>
           {user.email}
         </Typography>
-        <Typography variant="body2" color="textSecondary" gutterBottom>
-          Role: {user.role}
+        <Typography variant="body2" color="info.main" gutterBottom>
+          @{user.username}
         </Typography>
+        <Grid container alignItems="center" spacing={1} sx={{ mb: 2 }}>
+          <Grid item>{roleIcons[user.role]}</Grid>
+          <Grid item>
+            <Typography variant="body2" color="textSecondary">
+              {user.role}
+            </Typography>
+          </Grid>
+        </Grid>
         <Typography variant="body2" color="textSecondary" gutterBottom>
           Comments:
         </Typography>
         <List>
           {user.comments.map((comment) => (
-            <ListItem key={comment.id}>
-              <ListItemText primary={renderCommentText(comment.text)} secondary={new Date(comment.date).toLocaleDateString()} />
+            <ListItem
+              key={comment.id}
+              sx={{
+                border: '1px solid #e0e0e0',
+                borderRadius: '4px',
+                mb: 1,
+                p: 2,
+                bgcolor: '#f9f9f9',
+              }}
+            >
+              <ListItemText
+                primary={
+                  <Typography variant="body2" color="textPrimary">
+                    {renderCommentText(comment.text)}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="caption" color="textSecondary">
+                    {new Date(comment.date).toLocaleDateString()}
+                  </Typography>
+                }
+              />
             </ListItem>
           ))}
         </List>
