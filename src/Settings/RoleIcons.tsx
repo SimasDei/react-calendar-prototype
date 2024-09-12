@@ -5,8 +5,8 @@ import EngineeringIcon from '@mui/icons-material/Engineering';
 import { UserRole } from '../factories';
 
 export const roleIcons = {
-  [UserRole.Admin]: <AdminPanelSettingsIcon />,
-  [UserRole.Editor]: <EditIcon />,
-  [UserRole.Maintenance]: <BuildIcon />,
-  [UserRole.Engineer]: <EngineeringIcon />,
+  [UserRole.Admin]: <AdminPanelSettingsIcon color="primary" />,
+  [UserRole.Editor]: <EditIcon color="primary" />,
+  [UserRole.Maintenance]: <BuildIcon color="primary" />,
+  [UserRole.Engineer]: <EngineeringIcon color="primary" />,
 };

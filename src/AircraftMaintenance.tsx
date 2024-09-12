@@ -1,59 +1,83 @@
-import { Box, Container, Typography } from '@mui/material';
-import { FrappeGantt, Task, ViewMode } from 'frappe-gantt-react';
-import React from 'react';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import SendIcon from '@mui/icons-material/Send';
+import { Box, Container, List, ListItemText, ListSubheader, Typography } from '@mui/material';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import { FrappeGantt, ViewMode } from 'frappe-gantt-react';
+import * as React from 'react';
+import { useState } from 'react';
+import { Aircraft, AircraftFactory } from './factories';
+
+const initialAircrafts = AircraftFactory.createAircrafts(5, 5);
 
 const AircraftMaintenance: React.FC = () => {
-  const tasks: Task[] = [
-    new Task({
-      id: 'Task 1',
-      name: 'Engine Inspection',
-      start: '2024-09-01',
-      end: '2024-09-03',
-      progress: 50,
-      dependencies: '',
-    }),
-    new Task({
-      id: 'Task 2',
-      name: 'Landing Gear Overhaul',
-      start: '2024-09-04',
-      end: '2024-09-08',
-      progress: 75,
-      dependencies: 'Task 1',
-    }),
-    new Task({
-      id: 'Task 3',
-      name: 'Avionics Check',
-      start: '2024-09-09',
-      end: '2024-09-12',
-      progress: 30,
-      dependencies: 'Task 2',
-    }),
-    // Parent task
-    new Task({
-      id: 'Task 4',
-      name: 'Aircraft Complete Check',
-      start: '2024-08-30',
-      end: '2024-09-15',
-      progress: 40,
-      dependencies: '',
-    }),
-  ];
+  const [selectedAircraft, setSelectedAircraft] = useState<Aircraft | null>(null);
 
-  const handleTaskClick = (task: Task) => {
-    console.log('🚀 ~ handleTaskClick ~ task:', task);
+  const handleAircraftClick = (aircraft: Aircraft | null) => {
+    setSelectedAircraft(aircraft);
   };
 
   return (
-    <Container>
-      <Box sx={{ marginTop: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Aircraft Maintenance Schedule
-        </Typography>
-        <FrappeGantt
-          tasks={tasks}
-          onClick={handleTaskClick} // Handle task clicks
-          viewMode={ViewMode.Week} // Weekly view mode
-        />
+    <Container maxWidth="xl">
+      <Typography variant="h4" gutterBottom>
+        Aircraft Maintenance
+      </Typography>
+      <Box sx={{ display: 'flex', minWidth: 320, height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
+        <Box sx={{ width: '20%', minWidth: 240, borderRight: '1px solid #e0e0e0', p: 2, overflowY: 'auto' }}>
+          <List
+            sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+            component="nav"
+            aria-labelledby="nested-list-subheader"
+            subheader={
+              <ListSubheader component="div" id="nested-list-subheader">
+                Aircraft List
+              </ListSubheader>
+            }
+          >
+            <ListItemButton onClick={() => handleAircraftClick(null)}>
+              <ListItemIcon sx={{ minWidth: 30 }}>
+                <InboxIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="All" primaryTypographyProps={{ fontSize: '0.875rem' }} />
+            </ListItemButton>
+            {initialAircrafts.map((aircraft) => (
+              <ListItemButton key={aircraft.id} onClick={() => handleAircraftClick(aircraft)}>
+                <ListItemIcon sx={{ minWidth: 30 }}>
+                  <SendIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary={aircraft.name} primaryTypographyProps={{ fontSize: '0.875rem' }} />
+              </ListItemButton>
+            ))}
+          </List>
+        </Box>
+        <Box sx={{ flexGrow: 1, p: 2, overflowY: 'auto' }}>
+          {selectedAircraft ? (
+            <>
+              <Typography variant="h6" gutterBottom>
+                Maintenance Tasks for {selectedAircraft.name}
+              </Typography>
+              <Box sx={{ overflowX: 'auto' }}>
+                <FrappeGantt tasks={selectedAircraft.tasks} viewMode={ViewMode.Day} />
+              </Box>
+            </>
+          ) : (
+            <>
+              <Typography variant="h6" gutterBottom>
+                All Ongoing Maintenance Tasks
+              </Typography>
+              {initialAircrafts.map((aircraft) => (
+                <Box key={aircraft.id} sx={{ mb: 4 }}>
+                  <Typography variant="h6" gutterBottom>
+                    {aircraft.name}
+                  </Typography>
+                  <Box sx={{ overflowX: 'auto' }}>
+                    <FrappeGantt tasks={aircraft.tasks} viewMode={ViewMode.Day} />
+                  </Box>
+                </Box>
+              ))}
+            </>
+          )}
+        </Box>
       </Box>
     </Container>
   );
