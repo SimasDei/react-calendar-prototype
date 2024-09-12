@@ -2,7 +2,7 @@ import { EventChangeArg } from '@fullcalendar/core';
 import { Container, CssBaseline } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-import AircraftMaintenance from './AircraftMaintenance';
+import AircraftMaintenance from './AircraftMaintenance/AircraftMaintenance';
 import AircraftSpecification from './AircraftSpec/AircraftSpecification';
 import Calendar from './Calendar';
 import Sidebar from './Nav/Sidebar';
