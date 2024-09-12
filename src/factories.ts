@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker';
+
 export enum EventType {
   DealPipe = 'deal-pipe',
   Maintenance = 'maintenance',
@@ -23,6 +25,29 @@ export interface Resource {
   title: string;
   children: { id: string; title: string }[];
   events: Event[];
+}
+
+export enum UserRole {
+  Admin = 'Admin',
+  Editor = 'Editor',
+  Maintenance = 'Maintenance',
+  Engineer = 'Engineer',
+}
+
+export interface User {
+  id: string;
+  name: string;
+  username: string;
+  email: string;
+  avatar: string;
+  role: UserRole;
+  comments: Comment[];
+}
+
+export interface Comment {
+  id: string;
+  text: string;
+  date: string;
 }
 
 export class EventFactory {
@@ -117,5 +142,59 @@ export class ResourceFactory {
       ],
       events: [projectEvent, dealPipeEvent, preparationEvent, maintenanceEvent],
     };
+  }
+}
+
+export class CommentFactory {
+  static createComment(users: User[]): Comment {
+    const taggedUser = faker.helpers.arrayElement(users);
+    return {
+      id: faker.string.uuid(),
+      text: `${faker.lorem.sentence()} @${taggedUser.username}`,
+      date: faker.date.past().toISOString(),
+    };
+  }
+
+  static createComments(amount: number, users: User[]): Comment[] {
+    const comments: Comment[] = [];
+    for (let i = 0; i < amount; i++) {
+      comments.push(this.createComment(users));
+    }
+    return comments;
+  }
+}
+
+export class UserFactory {
+  static createUser(): User {
+    const firstName = faker.person.firstName();
+    const lastName = faker.person.lastName();
+    const name = `${firstName} ${lastName}`;
+    const username = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`;
+    const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com`;
+    const avatar = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${firstName.toLowerCase()}`;
+    const role = faker.helpers.arrayElement(Object.values(UserRole));
+
+    return {
+      id: faker.string.uuid(),
+      name,
+      username,
+      email,
+      avatar,
+      role,
+      comments: [],
+    };
+  }
+
+  static createUsers(amount: number): User[] {
+    const users: User[] = [];
+    for (let i = 0; i < amount; i++) {
+      users.push(this.createUser());
+    }
+
+    users.forEach((user) => {
+      user.comments = CommentFactory.createComments(faker.number.int({ min: 1, max: 5 }), users);
+    });
+
+    return users;
   }
 }
