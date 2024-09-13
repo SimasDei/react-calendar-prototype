@@ -41,7 +41,7 @@ const RolesPermissions: React.FC = () => {
     setSelectedUsers([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+  const handleClick = (_: React.MouseEvent<unknown>, id: string) => {
     const selectedIndex = selectedUsers.indexOf(id);
     let newSelected: string[] = [];
 

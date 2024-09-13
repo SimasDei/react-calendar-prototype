@@ -22,6 +22,7 @@ const UserForm: React.FC<UserFormProps> = ({ onAddUser }) => {
       avatar: `https://api.dicebear.com/9.x/pixel-art/svg?seed=${name.split(' ')[0].toLowerCase()}`,
       role,
       comments: [],
+      location: faker.location.city(),
     };
     onAddUser(newUser);
     setName('');
