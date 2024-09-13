@@ -5,6 +5,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 import AircraftMaintenance from './AircraftMaintenance/AircraftMaintenance';
 import AircraftSpecification from './AircraftSpec/AircraftSpecification';
 import Calendar from './Calendar';
+import { UserProvider } from './context/UserContext';
 import Sidebar from './Nav/Sidebar';
 import { events as generatedEvents, resources as generatedResources } from './resources';
 import Settings from './Settings/Settings';
@@ -33,18 +34,20 @@ const App: React.FC = () => {
   };
 
   return (
-    <HashRouter>
-      <CssBaseline />
-      <Sidebar />
-      <Container style={{ marginTop: '2rem', paddingLeft: '70px', maxWidth: '100%' }}>
-        <Routes>
-          <Route path="/" element={<Calendar events={events} resources={resources} onEventChange={handleEventChange} />} />
-          <Route path="/aircraft-specification" element={<AircraftSpecification />} />
-          <Route path="/maintenance" element={<AircraftMaintenance />} />
-          <Route path="/settings" element={<Settings />} />
-        </Routes>
-      </Container>
-    </HashRouter>
+    <UserProvider>
+      <HashRouter>
+        <CssBaseline />
+        <Sidebar />
+        <Container style={{ marginTop: '2rem', paddingLeft: '70px', maxWidth: '100%' }}>
+          <Routes>
+            <Route path="/" element={<Calendar events={events} resources={resources} onEventChange={handleEventChange} />} />
+            <Route path="/aircraft-specification" element={<AircraftSpecification />} />
+            <Route path="/maintenance" element={<AircraftMaintenance />} />
+            <Route path="/settings" element={<Settings />} />
+          </Routes>
+        </Container>
+      </HashRouter>
+    </UserProvider>
   );
 };
 

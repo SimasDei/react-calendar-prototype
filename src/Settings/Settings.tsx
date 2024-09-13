@@ -1,41 +1,48 @@
 import { Box, Divider, Grid, Paper, Tab, Tabs, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { User, UserFactory } from '../factories';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useUserContext } from '../context/UserContext';
+import { User } from '../factories';
 import TabPanel from './TabPanel';
 import UserForm from './UserForm';
 import UserList from './UserList';
 import UserModal from './UserModal';
-
-const initialUsers = UserFactory.createUsers(50);
+import UserPreferences from './UserPreferences';
 
 const Settings: React.FC = () => {
+  const location = useLocation();
   const [value, setValue] = useState(0);
-  const [users, setUsers] = useState<User[]>(initialUsers);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const { users, addUser, selectedUser, selectUser } = useUserContext();
   const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (location.state && location.state.tab !== undefined) {
+      setValue(location.state.tab);
+    }
+  }, [location.state]);
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   const handleAddUser = (newUser: User) => {
-    setUsers((prevUsers) => [newUser, ...prevUsers]);
+    addUser(newUser);
   };
 
   const handleUserClick = (user: User) => {
-    setSelectedUser(user);
+    selectUser(user);
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
-    setSelectedUser(null);
+    selectUser(null);
   };
 
   const handleTagClick = (username: string) => {
     const taggedUser = users.find((user) => user.username === username);
     if (taggedUser) {
-      setSelectedUser(taggedUser);
+      selectUser(taggedUser);
       setModalOpen(true);
     }
   };
@@ -78,7 +85,7 @@ const Settings: React.FC = () => {
       </TabPanel>
 
       <TabPanel value={value} index={2}>
-        <Box sx={{ p: 3 }}>Preferences Content</Box>
+        <UserPreferences onTagClick={handleTagClick} />
       </TabPanel>
 
       <UserModal user={selectedUser} open={modalOpen} onClose={handleCloseModal} onTagClick={handleTagClick} />

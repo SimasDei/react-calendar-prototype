@@ -193,7 +193,7 @@ export class UserFactory {
     }
 
     users.forEach((user) => {
-      user.comments = CommentFactory.createComments(faker.number.int({ min: 1, max: 5 }), users);
+      user.comments = CommentFactory.createComments(faker.number.int({ min: 1, max: 15 }), users);
     });
 
     return users;

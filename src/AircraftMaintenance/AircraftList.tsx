@@ -1,5 +1,5 @@
+import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 import FlightIcon from '@mui/icons-material/Flight';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import { List, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import React from 'react';
 import { Aircraft } from '../factories';
@@ -23,9 +23,9 @@ const AircraftList: React.FC<AircraftListProps> = ({ aircrafts, onAircraftClick 
     >
       <ListItemButton onClick={() => onAircraftClick(null)}>
         <ListItemIcon sx={{ minWidth: 30 }}>
-          <InboxIcon fontSize="small" />
+          <ConnectingAirportsIcon />
         </ListItemIcon>
-        <ListItemText primary="All" primaryTypographyProps={{ fontSize: '0.875rem' }} />
+        <ListItemText primary="All" primaryTypographyProps={{ fontSize: '1.2rem' }} />
       </ListItemButton>
       {aircrafts.map((aircraft) => (
         <ListItemButton key={aircraft.id} onClick={() => onAircraftClick(aircraft)}>

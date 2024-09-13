@@ -1,16 +1,23 @@
 import { AirplanemodeActive, Build, CalendarToday, Menu, Settings } from '@mui/icons-material';
-import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Avatar, Box, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUserContext } from '../context/UserContext';
 
 const drawerWidthExpanded = 240;
 const drawerWidthCollapsed = 70;
 
 const Sidebar: React.FC = () => {
+  const { mainUser } = useUserContext();
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(true);
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
+  };
+
+  const handleAvatarClick = () => {
+    navigate('/settings', { state: { tab: 2 } });
   };
 
   return (
@@ -26,7 +33,7 @@ const Sidebar: React.FC = () => {
         },
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
+      <Box style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
         <IconButton
           onClick={toggleSidebar}
           sx={{
@@ -38,8 +45,16 @@ const Sidebar: React.FC = () => {
         >
           <Menu />
         </IconButton>
-      </div>
+      </Box>
       <List>
+        {mainUser && (
+          <ListItemButton onClick={handleAvatarClick}>
+            <ListItemIcon>
+              <Avatar alt={mainUser.username} src={mainUser.avatar} />
+            </ListItemIcon>
+            <ListItemText primary={mainUser.name.split(' ')[0]} sx={{ display: collapsed ? 'none' : 'block' }} />
+          </ListItemButton>
+        )}
         <ListItem
           component={Link}
           to="/"

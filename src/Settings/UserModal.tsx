@@ -1,5 +1,5 @@
-import { Box, Grid, List, ListItem, ListItemText, Modal, Typography } from '@mui/material';
-import React from 'react';
+import { Box, Grid, List, ListItem, ListItemText, Modal, Pagination, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { User } from '../factories';
 import { roleIcons } from './RoleIcons';
 import TaggedUser from './TaggedUser';
@@ -12,6 +12,13 @@ interface UserModalProps {
 }
 
 const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onTagClick }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const commentsPerPage = 3;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [user]);
+
   if (!user) return null;
 
   const renderCommentText = (text: string) => {
@@ -23,6 +30,14 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onTagClick }
       }
       return part;
     });
+  };
+
+  const indexOfLastComment = currentPage * commentsPerPage;
+  const indexOfFirstComment = indexOfLastComment - commentsPerPage;
+  const currentComments = user.comments.slice(indexOfFirstComment, indexOfLastComment);
+
+  const handlePageChange = (_: React.ChangeEvent<unknown>, page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -60,7 +75,7 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onTagClick }
           Comments:
         </Typography>
         <List>
-          {user.comments.map((comment) => (
+          {currentComments.map((comment) => (
             <ListItem
               key={comment.id}
               sx={{
@@ -86,6 +101,12 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onTagClick }
             </ListItem>
           ))}
         </List>
+        <Pagination
+          count={Math.ceil(user.comments.length / commentsPerPage)}
+          page={currentPage}
+          onChange={handlePageChange}
+          sx={{ mt: 2 }}
+        />
       </Box>
     </Modal>
   );
