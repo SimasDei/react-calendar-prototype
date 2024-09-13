@@ -6,6 +6,7 @@ interface UserContextType {
   mainUser: User | null;
   setMainUser: (user: User | null) => void;
   addUser: (user: User) => void;
+  deleteUser: (userId: string) => void;
   selectedUser: User | null;
   selectUser: (user: User | null) => void;
 }
@@ -28,8 +29,14 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setSelectedUser(user);
   };
 
+  const deleteUser = (userId: string) => {
+    setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+  };
+
   return (
-    <UserContext.Provider value={{ users, mainUser, setMainUser, addUser, selectedUser, selectUser }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ users, mainUser, setMainUser, addUser, deleteUser, selectedUser, selectUser }}>
+      {children}
+    </UserContext.Provider>
   );
 };
 

@@ -163,6 +163,7 @@ export interface User {
   avatar: string;
   role: UserRole;
   comments: Comment[];
+  location: string;
 }
 
 export class UserFactory {
@@ -172,8 +173,9 @@ export class UserFactory {
     const name = `${firstName} ${lastName}`;
     const username = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`;
     const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com`;
-    const avatar = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${firstName.toLowerCase()}`;
+    const avatar = `https://api.dicebear.com/9.x/personas/svg?seed=${firstName.toLowerCase()}`;
     const role = faker.helpers.arrayElement(Object.values(UserRole));
+    const location = faker.location.city();
 
     return {
       id: faker.string.uuid(),
@@ -183,6 +185,7 @@ export class UserFactory {
       avatar,
       role,
       comments: [],
+      location,
     };
   }
 

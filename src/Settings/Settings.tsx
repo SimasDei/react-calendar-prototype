@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useUserContext } from '../context/UserContext';
 import { User } from '../factories';
+import RolesPermissions from './RolesPermissions';
 import TabPanel from './TabPanel';
 import UserForm from './UserForm';
 import UserList from './UserList';
@@ -81,7 +82,7 @@ const Settings: React.FC = () => {
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-        <Box sx={{ p: 3 }}>Roles & Permissions Content</Box>
+        <RolesPermissions />
       </TabPanel>
 
       <TabPanel value={value} index={2}>

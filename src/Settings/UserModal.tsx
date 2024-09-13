@@ -1,4 +1,4 @@
-import { Box, Grid, List, ListItem, ListItemText, Modal, Pagination, Typography } from '@mui/material';
+import { Avatar, Box, Grid, List, ListItem, ListItemText, Modal, Pagination, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { User } from '../factories';
 import { roleIcons } from './RoleIcons';
@@ -54,6 +54,9 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onTagClick }
           p: 4,
         }}
       >
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+          <Avatar src={user.avatar} sx={{ width: 100, height: 100 }} />
+        </Box>
         <Typography variant="h6" gutterBottom>
           {user.name}
         </Typography>
