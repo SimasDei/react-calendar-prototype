@@ -2,7 +2,7 @@ import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 import FlightIcon from '@mui/icons-material/Flight';
 import { List, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import React from 'react';
-import { Aircraft } from '../factories';
+import { Aircraft } from '../utils/factories';
 
 interface AircraftListProps {
   aircrafts: Aircraft[];

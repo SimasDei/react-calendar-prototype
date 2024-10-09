@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { FrappeGantt, ViewMode } from 'frappe-gantt-react';
 import React from 'react';
-import { Aircraft } from '../factories';
+import { Aircraft } from '../utils/factories';
 
 interface GanttChartDisplayProps {
   aircrafts: Aircraft[];

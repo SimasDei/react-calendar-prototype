@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { User, UserFactory } from '../factories';
+import { User, UserFactory } from '../utils/factories';
 
 interface UserContextType {
   users: User[];

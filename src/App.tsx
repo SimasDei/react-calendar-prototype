@@ -7,8 +7,8 @@ import AircraftSpecification from './AircraftSpec/AircraftSpecification';
 import Calendar from './Calendar';
 import { UserProvider } from './context/UserContext';
 import Sidebar from './Nav/Sidebar';
-import { events as generatedEvents, resources as generatedResources } from './resources';
 import Settings from './Settings/Settings';
+import { events as generatedEvents, resources as generatedResources } from './utils/resources';
 
 const App: React.FC = () => {
   const [events, setEvents] = useState(generatedEvents);

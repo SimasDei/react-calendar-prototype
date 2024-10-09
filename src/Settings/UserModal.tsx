@@ -1,6 +1,6 @@
 import { Avatar, Box, Grid, List, ListItem, ListItemText, Modal, Pagination, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { User } from '../factories';
+import { User } from '../utils/factories';
 import { roleIcons } from './RoleIcons';
 import TaggedUser from './TaggedUser';
 

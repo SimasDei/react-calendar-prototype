@@ -1,7 +1,7 @@
 import { Avatar, Box, Card, CardActionArea, CardContent, Grid, Pagination, TextField, Typography } from '@mui/material';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
-import { User } from '../factories';
+import { User } from '../utils/factories';
 
 interface UserListProps {
   users: User[];

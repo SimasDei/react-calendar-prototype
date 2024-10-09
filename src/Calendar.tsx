@@ -8,7 +8,7 @@ import React, { useRef, useState } from 'react';
 import ChildEvent from './Events/ChildEvent';
 import EventDetailsModal from './Events/EventDetailsModal';
 import MainEvent from './Events/MainEvent';
-import { EventType, Resource } from './factories';
+import { EventType, Resource } from './utils/factories';
 
 interface CalendarProps {
   events: EventInput[];

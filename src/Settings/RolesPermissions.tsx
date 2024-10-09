@@ -21,7 +21,7 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useUserContext } from '../context/UserContext';
-import { User, UserRole } from '../factories';
+import { User, UserRole } from '../utils/factories';
 import { roleIcons } from './RoleIcons';
 
 const RolesPermissions: React.FC = () => {

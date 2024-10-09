@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Box, Button, Grid, MenuItem, Select, TextField } from '@mui/material';
 import React, { useState } from 'react';
-import { User, UserRole } from '../factories';
+import { User, UserRole } from '../utils/factories';
 
 interface UserFormProps {
   onAddUser: (user: User) => void;

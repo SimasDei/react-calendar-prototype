@@ -2,7 +2,7 @@ import { Box, Divider, Grid, Paper, Tab, Tabs, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useUserContext } from '../context/UserContext';
-import { User } from '../factories';
+import { User } from '../utils/factories';
 import RolesPermissions from './RolesPermissions';
 import TabPanel from './TabPanel';
 import UserForm from './UserForm';

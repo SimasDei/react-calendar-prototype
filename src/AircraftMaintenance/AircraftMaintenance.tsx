@@ -1,6 +1,6 @@
 import { Box, Container, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { Aircraft, AircraftFactory } from '../factories';
+import { Aircraft, AircraftFactory } from '../utils/factories';
 import AircraftList from './AircraftList';
 import GanttChartDisplay from './GanttChartDisplay';
 
