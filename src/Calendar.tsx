@@ -1,27 +1,38 @@
-import { EventChangeArg, EventClickArg, EventInput } from '@fullcalendar/core';
+import { EventChangeArg, EventClickArg } from '@fullcalendar/core';
 import { EventImpl } from '@fullcalendar/core/internal';
 import interactionPlugin from '@fullcalendar/interaction';
 import FullCalendar from '@fullcalendar/react';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { Paper, Typography } from '@mui/material';
 import React, { useRef, useState } from 'react';
+import { useCalendarContext } from './context/CalendarContext';
 import ChildEvent from './Events/ChildEvent';
 import EventDetailsModal from './Events/EventDetailsModal';
 import MainEvent from './Events/MainEvent';
-import { EventType, Resource } from './utils/factories';
+import { Event, EventType } from './utils/factories';
 
-interface CalendarProps {
-  events: EventInput[];
-  resources: Resource[];
-  onEventChange: (changeInfo: EventChangeArg) => void;
-}
-
-const Calendar: React.FC<CalendarProps> = ({ events, resources, onEventChange }) => {
+const Calendar: React.FC = () => {
+  const { events, resources, updateEvent } = useCalendarContext();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<EventImpl | null>(null);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [currentView, setCurrentView] = useState('resourceTimelineWeek');
   const calendarRef = useRef<FullCalendar>(null);
+
+  const handleEventChange = (changeInfo: EventChangeArg) => {
+    const updatedEvent = changeInfo.event;
+    const updatedEventData: Event = {
+      id: updatedEvent.id,
+      title: updatedEvent.title,
+      start: updatedEvent.startStr,
+      end: updatedEvent.endStr,
+      resourceId: updatedEvent.getResources()[0]?.id || '',
+      extendedProps: {
+        ...(updatedEvent.extendedProps as { type: EventType; gradient: string }),
+      },
+    };
+    updateEvent(updatedEventData);
+  };
 
   const handleEventClick = (eventInfo: EventClickArg) => {
     const event = eventInfo.event;
@@ -122,7 +133,7 @@ const Calendar: React.FC<CalendarProps> = ({ events, resources, onEventChange })
         eventResizableFromStart={true}
         eventStartEditable={true}
         eventDurationEditable={true}
-        eventChange={onEventChange}
+        eventChange={handleEventChange}
         eventClick={handleEventClick}
         eventBackgroundColor="transparent"
         eventBorderColor="transparent"

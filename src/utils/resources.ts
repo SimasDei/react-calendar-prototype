@@ -1,4 +1,4 @@
-import { ResourceFactory, UserFactory } from './factories';
+import { ResourceFactory } from './factories';
 
 const getRandomStartDate = (): string => {
   const startYear = Math.floor(Math.random() * 3) + 2023;
@@ -15,5 +15,3 @@ const msns = generateRandomMSNs(20);
 export const resources = msns.map((msn) => ResourceFactory.createResource(msn, getRandomStartDate()));
 
 export const events = resources.flatMap((resource) => resource.events);
-
-export const users = UserFactory.createUsers(50);

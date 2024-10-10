@@ -36,6 +36,10 @@ export class EventFactory {
     [EventType.Project]: 'linear-gradient(45deg, #ffffff, #f0f0f0)',
   };
 
+  private static formatDateTime(date: string, time: string): string {
+    return `${date}T${time}`;
+  }
+
   static createEvent(
     type: EventType,
     resourceId: string,
@@ -49,8 +53,8 @@ export class EventFactory {
       id: `${resourceId}-${type}`,
       resourceId,
       title,
-      start: `${startDate}T08:00:00`,
-      end: `${endDate}T17:00:00`,
+      start: this.formatDateTime(startDate, '08:00:00'),
+      end: this.formatDateTime(endDate, '17:00:00'),
       extendedProps: {
         type,
         gradient: this.gradientMap[type],
@@ -63,7 +67,10 @@ export class EventFactory {
   public static addDaysToDate(date: string, days: number): string {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + days);
-    return newDate.toISOString().split('T')[0];
+    const year = newDate.getFullYear();
+    const month = String(newDate.getMonth() + 1).padStart(2, '0');
+    const day = String(newDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }
 
