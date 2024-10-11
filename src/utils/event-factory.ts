@@ -1,4 +1,6 @@
-import { Comment } from './comment-factory';
+import { faker } from '@faker-js/faker';
+import { Comment, CommentFactory } from './comment-factory';
+import { User } from './user-factory';
 
 export enum EventType {
   DealPipe = 'deal-pipe',
@@ -46,9 +48,20 @@ export class EventFactory {
     title: string,
     description: string,
     startDate: string,
-    durationDays: number
+    durationDays: number,
+    users: User[]
   ): Event {
     const endDate = this.addDaysToDate(startDate, durationDays);
+
+    const numComments = faker.number.int({ min: 1, max: 10 });
+    const comments: Comment[] = [];
+
+    for (let i = 0; i < numComments; i++) {
+      const commenter = faker.helpers.arrayElement(users);
+      const comment = CommentFactory.createComment(commenter.id, users);
+      comments.push(comment);
+    }
+
     return {
       id: `${resourceId}-${type}`,
       resourceId,
@@ -59,7 +72,7 @@ export class EventFactory {
         type,
         gradient: this.gradientMap[type],
         description,
-        comments: [],
+        comments,
       },
     };
   }
@@ -75,7 +88,7 @@ export class EventFactory {
 }
 
 export class ResourceFactory {
-  static createResource(msn: string, startDate: string): Resource {
+  static createResource(msn: string, startDate: string, users: User[]): Resource {
     const preparationDuration = Math.floor(Math.random() * 30) + 15;
     const maintenanceDuration = Math.floor(Math.random() * 30) + 15;
     const projectDuration = preparationDuration + maintenanceDuration + Math.floor(Math.random() * 30) + 15;
@@ -86,7 +99,8 @@ export class ResourceFactory {
       'MSN Project',
       'Project Description',
       startDate,
-      projectDuration
+      projectDuration,
+      users
     );
 
     const preparationEvent = EventFactory.createEvent(
@@ -95,7 +109,8 @@ export class ResourceFactory {
       'Source Project Preparation',
       'Preparation Description',
       startDate,
-      preparationDuration
+      preparationDuration,
+      users
     );
 
     const maintenanceStartDate = EventFactory.addDaysToDate(startDate, preparationDuration + 1);
@@ -105,7 +120,8 @@ export class ResourceFactory {
       'Maintenance',
       'Maintenance Description',
       maintenanceStartDate,
-      maintenanceDuration
+      maintenanceDuration,
+      users
     );
 
     const dealPipeStart = startDate;
@@ -115,7 +131,8 @@ export class ResourceFactory {
       'Deal Pipe',
       'Deal Pipe Description',
       dealPipeStart,
-      projectDuration
+      projectDuration,
+      users
     );
 
     return {

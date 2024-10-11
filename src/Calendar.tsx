@@ -1,11 +1,11 @@
 import { EventChangeArg, EventClickArg } from '@fullcalendar/core';
-import { EventImpl } from '@fullcalendar/core/internal';
 import interactionPlugin from '@fullcalendar/interaction';
 import FullCalendar from '@fullcalendar/react';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { Paper, Typography } from '@mui/material';
 import React, { useRef, useState } from 'react';
 import { useCalendarContext } from './context/CalendarContext';
+import { useUserContext } from './context/UserContext';
 import ChildEvent from './Events/ChildEvent';
 import EventDetailsModal from './Events/EventDetailsModal';
 import MainEvent from './Events/MainEvent';
@@ -13,31 +13,37 @@ import { Event, EventType } from './utils/factories';
 
 const Calendar: React.FC = () => {
   const { events, resources, updateEvent } = useCalendarContext();
+  const { users, selectUser } = useUserContext();
+
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<EventImpl | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [currentView, setCurrentView] = useState('resourceTimelineWeek');
   const calendarRef = useRef<FullCalendar>(null);
 
   const handleEventChange = (changeInfo: EventChangeArg) => {
-    const updatedEvent = changeInfo.event;
+    const calendarEvent = changeInfo.event;
     const updatedEventData: Event = {
-      id: updatedEvent.id,
-      title: updatedEvent.title,
-      start: updatedEvent.startStr,
-      end: updatedEvent.endStr,
-      resourceId: updatedEvent.getResources()[0]?.id || '',
+      id: calendarEvent.id,
+      title: calendarEvent.title,
+      start: calendarEvent.startStr,
+      end: calendarEvent.endStr,
+      resourceId: calendarEvent.getResources()[0]?.id || '',
       extendedProps: {
-        ...(updatedEvent.extendedProps as { type: EventType; gradient: string }),
+        ...(calendarEvent.extendedProps as Event['extendedProps']),
       },
     };
+
     updateEvent(updatedEventData);
   };
 
   const handleEventClick = (eventInfo: EventClickArg) => {
-    const event = eventInfo.event;
-    setSelectedEvent(event);
-    setModalOpen(true);
+    const calendarEvent = eventInfo.event;
+    const eventInContext = events.find((evt) => evt.id === calendarEvent.id);
+    if (eventInContext) {
+      setSelectedEvent(eventInContext);
+      setModalOpen(true);
+    }
   };
 
   const handleEventClose = () => {
@@ -45,14 +51,22 @@ const Calendar: React.FC = () => {
     setSelectedEvent(null);
   };
 
-  const handleSaveEvent = (updatedEvent: { title: string; description?: string; startDate: string; endDate: string }) => {
-    if (selectedEvent) {
-      selectedEvent.setProp('title', updatedEvent.title);
-      selectedEvent.setExtendedProp('description', updatedEvent.description);
-      selectedEvent.setStart(updatedEvent.startDate);
-      selectedEvent.setEnd(updatedEvent.endDate);
-      handleEventClose();
+  const handleSaveEvent = (updatedEvent: Event) => {
+    updateEvent(updatedEvent);
+
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      const calendarEvent = calendarApi.getEventById(updatedEvent.id);
+      if (calendarEvent) {
+        calendarEvent.setProp('title', updatedEvent.title);
+        calendarEvent.setExtendedProp('description', updatedEvent.extendedProps.description);
+        calendarEvent.setExtendedProp('comments', updatedEvent.extendedProps.comments);
+        calendarEvent.setStart(updatedEvent.start);
+        calendarEvent.setEnd(updatedEvent.end);
+      }
     }
+
+    handleEventClose();
   };
 
   const handleYearChange = (year: number) => {
@@ -70,6 +84,14 @@ const Calendar: React.FC = () => {
     if (calendarApi) {
       calendarApi.changeView(view);
       calendarApi.gotoDate(new Date());
+    }
+  };
+
+  const handleTagClick = (username: string) => {
+    const taggedUser = users.find((user) => user.username === username);
+    if (taggedUser) {
+      selectUser(taggedUser);
+      setModalOpen(true);
     }
   };
 
@@ -172,11 +194,9 @@ const Calendar: React.FC = () => {
         <EventDetailsModal
           open={modalOpen}
           onClose={handleEventClose}
-          eventTitle={selectedEvent.title}
-          eventDescription={selectedEvent.extendedProps.description || ''}
-          eventStartDate={selectedEvent.startStr}
-          eventEndDate={selectedEvent.endStr}
+          event={selectedEvent}
           onSave={handleSaveEvent}
+          onTagClick={handleTagClick}
         />
       )}
     </Paper>
